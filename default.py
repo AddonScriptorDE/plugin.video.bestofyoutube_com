@@ -12,6 +12,12 @@ thisPlugin = int(sys.argv[1])
 settings = xbmcaddon.Addon(id='plugin.video.bestofyoutube_com')
 translation = settings.getLocalizedString
 
+def cleanTitle(title):
+        title=title.replace("&lt;","<").replace("&gt;",">").replace("&amp;","&").replace("&#039;","\\").replace("&quot;","\"").replace("&szlig;","ß").replace("&ndash;","-")
+        title=title.replace("&Auml;","Ä").replace("&Uuml;","Ü").replace("&Ouml;","Ö").replace("&auml;","ä").replace("&uuml;","ü").replace("&ouml;","ö")
+        title=title.strip()
+        return title
+
 def index():
         addDir(translation(30001),"NEW",1,"")
         addDir(translation(30002),"http://www.bestofyoutube.com/index.php?show=week",3,"")
@@ -19,15 +25,14 @@ def index():
         addDir(translation(30004),"http://www.bestofyoutube.com/index.php?show=year",3,"")
         addDir(translation(30005),"http://www.bestofyoutube.com/index.php?show=alltime",3,"")
         xbmcplugin.endOfDirectory(thisPlugin)
-        if (xbmc.getSkinDir() == "skin.confluence" or xbmc.getSkinDir() == "skin.touched"): xbmc.executebuiltin('Container.SetViewMode(50)')
 
 def showContentLatest():
         content = getUrl("http://feeds.feedburner.com/bestofyoutubedotcom")
         match=re.compile('<item><title>(.+?)</title><description>(.+?)a href="(.+?)"(.+?)img src="(.+?)"', re.DOTALL).findall(content)
         for title,desc,url,temp,thumb in match:
-                addLink(title,url,2,thumb)          
+                title=cleanTitle(title)
+                addLink(title,url,2,thumb)
         xbmcplugin.endOfDirectory(thisPlugin)
-        if (xbmc.getSkinDir() == "skin.confluence" or xbmc.getSkinDir() == "skin.touched"): xbmc.executebuiltin('Container.SetViewMode(500)')
 
 def playVideo(url):
         if url.find("http://")==0:
@@ -50,6 +55,7 @@ def showContent(url):
             thumb="http://img.youtube.com/vi/"+url+"/0.jpg"
             match=re.compile("<div class='title'><a href='/(.+?)'>(.+?)</a>", re.DOTALL).findall(entry)
             title=match[0][1]
+            title=cleanTitle(title)
             addLink(title,url,2,thumb)
         content=content[content.find('<div class="pagination">'):]
         content=content[:content.find('</div>')]
@@ -60,7 +66,6 @@ def showContent(url):
           if entry.find('next &#187;')>=0:
             addDir("Next Page",url,3,'')
         xbmcplugin.endOfDirectory(thisPlugin)
-        if (xbmc.getSkinDir() == "skin.confluence" or xbmc.getSkinDir() == "skin.touched"): xbmc.executebuiltin('Container.SetViewMode(500)')
 
 def getUrl(url):
     req = urllib2.Request(url)
