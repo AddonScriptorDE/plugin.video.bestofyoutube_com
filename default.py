@@ -24,6 +24,8 @@ def index():
         addDir(translation(30003),"http://www.bestofyoutube.com/index.php?show=month",3,"")
         addDir(translation(30004),"http://www.bestofyoutube.com/index.php?show=year",3,"")
         addDir(translation(30005),"http://www.bestofyoutube.com/index.php?show=alltime",3,"")
+        addDir(translation(30006),"http://www.bestofyoutube.com/index.php?show=random",3,"")
+        addDir(translation(30007),"SEARCH",4,"")
         xbmcplugin.endOfDirectory(thisPlugin)
 
 def showContentLatest():
@@ -33,6 +35,13 @@ def showContentLatest():
                 title=cleanTitle(title)
                 addLink(title,url,2,thumb)
         xbmcplugin.endOfDirectory(thisPlugin)
+
+def search():
+        keyboard = xbmc.Keyboard('', str(translation(30007)))
+        keyboard.doModal()
+        if keyboard.isConfirmed() and keyboard.getText():
+          search_string = keyboard.getText().replace(" ","+")
+          showContent("http://www.bestofyoutube.com/search.php?q="+search_string)
 
 def playVideo(url):
         if url.find("http://")==0:
@@ -126,3 +135,5 @@ elif mode==2:
         playVideo(url)
 elif mode==3:
         showContent(url)
+elif mode==4:
+        search()
