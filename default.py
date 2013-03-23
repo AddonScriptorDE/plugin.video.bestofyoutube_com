@@ -14,6 +14,8 @@ if forceViewMode=="true":
 else:
   forceViewMode=False
 viewMode=str(addon.getSetting("viewMode"))
+filterScore=int(addon.getSetting("filterScore"))
+filterVoteThreshold=int(addon.getSetting("filterVoteThreshold"))
 
 def index():
         addDir(translation(30001),"http://www.bestofyoutube.com","listVideos","")
@@ -76,6 +78,10 @@ def listVideos(url):
               percentage=int((up/(up+down))*100)
             else:
               percentage=100
+            
+            if (up+down)>filterVoteThreshold and percentage<filterScore:
+                continue
+            
             title=title+" ("+str(percentage)+"%)"
             addLink(title,id,"playVideo",thumb)
         content=content[content.find('<div class="pagination">'):]

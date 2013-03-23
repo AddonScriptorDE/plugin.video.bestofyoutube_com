@@ -1,4 +1,6 @@
 <settings>
    <setting id="forceViewMode" type="bool" label="30101" default="false"/>
    <setting id="viewMode" type="number" label="30102" default="500"/>
+   <setting id="filterScore" type="number" label="30104" default="0"/>
+   <setting id="filterVoteThreshold" type="number" label="30105" default="10"/>
 </settings>
